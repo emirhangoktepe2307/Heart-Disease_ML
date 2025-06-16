@@ -5,16 +5,16 @@ import os
 
 def add_ratios(X):
     # Kan Basıncı Ve Enfeksiyon Oranı
-    X['Bp/Crp'] = X['crp_lvl'] / X['age']
+    X['bp_crp_ratio'] = X['crp_lvl'] / X['age']
     
     # Kolesterol ve Kan Basıncı Oranı
-    X['Ves_dia_est'] = X['bp'] / X['chol']
+    X['ves_dia_est'] = X['trestbps'] / X['chol']
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['Meal_order_record'] = X['chol'] / X['bmi']
-
-    #Egzersiz Durumuna Bağlı Kolesterol Oranı
-    X['Chol/Exe'] = X['chol'] / X['exercise_enc']
+    X['meal_order_record'] = X['chol'] / X['bmi']
+    
+    # Egzersiz Durumuna Bağlı Kolesterol Oranı
+    X['chol_exe_ratio'] = X['chol'] / X['exercise_enc']
     
     return X
 
@@ -55,7 +55,6 @@ col1, col2 = st.columns(2)
 with col1:
     age = st.number_input("Yaş", min_value=1, max_value=120, value=30)
     sex = st.selectbox("Cinsiyet", ["Kadın", "Erkek"])
-    bp=st.number_input("Tansiyonunuzu (Büyük) Giriniz:",min_value=120,max_value=170,value=140)
     trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=110)
     chol = st.number_input("Kolesterol (mg/dl) Seviyesini Giriniz:", min_value=100, max_value=600, value=200)
     bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10, max_value=50, value=20)
@@ -98,7 +97,6 @@ if st.button("Tahmin Et"):
         # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
         input_data = np.array([[
             age,
-            bp, 
             sex, 
             trestbps, 
             chol, 
