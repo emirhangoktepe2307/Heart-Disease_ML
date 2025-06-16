@@ -1,6 +1,7 @@
 import streamlit as st
 import pickle
 import numpy as np
+import os
 
 # Sayfa yapılandırması
 st.set_page_config(
@@ -16,14 +17,30 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 # Model yükleme
 @st.cache_resource
 def load_model():
-    with open('heart_model.pkl', 'rb') as file:
-        model = pickle.load(file)
-    return model
+    try:
+        model_path = 'heart_model.pkl'
+        if not os.path.exists(model_path):
+            st.error(f"Model dosyası bulunamadı: {model_path}")
+            st.error("Çalışma dizini: " + os.getcwd())
+            st.error("Dizindeki dosyalar: " + str(os.listdir()))
+            return None
+            
+        with open(model_path, 'rb') as file:
+            model = pickle.load(file)
+        return model
+    except Exception as e:
+        st.error(f"Model yüklenirken hata oluştu: {str(e)}")
+        return None
 
-try:
-    model = load_model()
-except:
-    st.error("Model yüklenirken bir hata oluştu. Lütfen model dosyasının doğru konumda olduğundan emin olun.")
+# Model yükleme denemesi
+model = load_model()
+if model is None:
+    st.error("""
+    Model yüklenemedi. Lütfen aşağıdakileri kontrol edin:
+    1. Model dosyası (heart_model.pkl) projenin kök dizininde olmalı
+    2. Model dosyası doğru formatta olmalı
+    3. Model dosyasına erişim izinleri doğru olmalı
+    """)
     st.stop()
 
 # Kullanıcı girdileri
@@ -54,21 +71,24 @@ exang = 1 if exang == "Evet" else 0
 
 # Tahmin butonu
 if st.button("Tahmin Et"):
-    # Girdileri diziye dönüştürme
-    input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak]])
-    
-    # Tahmin yapma
-    prediction = model.predict(input_data)
-    probability = model.predict_proba(input_data)
-    
-    # Sonuçları gösterme
-    st.subheader("Tahmin Sonucu")
-    if prediction[0] == 1:
-        st.error("Yüksek Kalp Hastalığı Riski")
-    else:
-        st.success("Düşük Kalp Hastalığı Riski")
-    
-    st.write(f"Risk Olasılığı: {probability[0][1]*100:.2f}%")
+    try:
+        # Girdileri diziye dönüştürme
+        input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak]])
+        
+        # Tahmin yapma
+        prediction = model.predict(input_data)
+        probability = model.predict_proba(input_data)
+        
+        # Sonuçları gösterme
+        st.subheader("Tahmin Sonucu")
+        if prediction[0] == 1:
+            st.error("Yüksek Kalp Hastalığı Riski")
+        else:
+            st.success("Düşük Kalp Hastalığı Riski")
+        
+        st.write(f"Risk Olasılığı: {probability[0][1]*100:.2f}%")
+    except Exception as e:
+        st.error(f"Tahmin yapılırken bir hata oluştu: {str(e)}")
 
 # Bilgilendirme
 st.markdown("---")
