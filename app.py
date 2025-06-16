@@ -1,9 +1,19 @@
 import streamlit as st
 import pickle
 import numpy as np
+import pandas as pd
 import os
 
 def add_ratios(X):
+    # DataFrame'e dönüştürme
+    if isinstance(X, np.ndarray):
+        X = pd.DataFrame(X, columns=['age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
+                                   'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
+                                   'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
+                                   'alcohol_enc', 'stress_enc', 'sleep_hours', 
+                                   'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
+                                   'crp_lvl', 'hmocystesine_lvl'])
+    
     # Kan Basıncı Ve Enfeksiyon Oranı
     X['bp_crp_ratio'] = X['crp_lvl'] / X['age']
     
@@ -96,8 +106,8 @@ if st.button("Tahmin Et"):
     try:
         # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
         input_data = np.array([[
-            age,
-            sex, 
+            age, 
+            sex_enc, 
             trestbps, 
             chol, 
             exercise_enc, 
@@ -116,11 +126,14 @@ if st.button("Tahmin Et"):
             fbs,
             crp_lvl,
             hmocystesine_lvl
-            ]])
+        ]])
+        
+        # DataFrame'e dönüştürme ve oranları ekleme
+        input_df = add_ratios(input_data)
         
         # Tahminleme
-        prediction = model.predict(input_data)
-        probability = model.predict_proba(input_data)
+        prediction = model.predict(input_df)
+        probability = model.predict_proba(input_df)
         
         # Sonuçları gösterme
         st.subheader("Tahmin Sonucu")
