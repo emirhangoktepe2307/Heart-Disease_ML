@@ -2,6 +2,7 @@ import streamlit as st
 import pickle
 import numpy as np
 import os
+import gzip
 
 # Sayfa yapılandırması
 st.set_page_config(
@@ -25,23 +26,32 @@ def load_model():
             st.error("Dizindeki dosyalar: " + str(os.listdir()))
             return None
             
+        # Model dosyasını yükle
         with open(model_path, 'rb') as file:
-            model = pickle.load(file)
-        return model
+            try:
+                model = pickle.load(file)
+                st.success("Model başarıyla yüklendi!")
+                return model
+            except Exception as e:
+                st.error(f"Model dosyası yüklenirken hata oluştu: {str(e)}")
+                return None
     except Exception as e:
         st.error(f"Model yüklenirken hata oluştu: {str(e)}")
         return None
 
 # Model yükleme denemesi
-model = load_model()
-if model is None:
-    st.error("""
-    Model yüklenemedi. Lütfen aşağıdakileri kontrol edin:
-    1. Model dosyası (heart_model.pkl) projenin kök dizininde olmalı
-    2. Model dosyası doğru formatta olmalı
-    3. Model dosyasına erişim izinleri doğru olmalı
-    """)
-    st.stop()
+with st.spinner('Model yükleniyor...'):
+    model = load_model()
+    if model is None:
+        st.error("""
+        Model yüklenemedi. Lütfen aşağıdakileri kontrol edin:
+        1. Model dosyası (heart_model.pkl) projenin kök dizininde olmalı
+        2. Model dosyası doğru formatta olmalı
+        3. Model dosyasına erişim izinleri doğru olmalı
+        
+        Hata detayları için yukarıdaki mesajları kontrol edin.
+        """)
+        st.stop()
 
 # Kullanıcı girdileri
 st.subheader("Lütfen aşağıdaki bilgileri giriniz:")
