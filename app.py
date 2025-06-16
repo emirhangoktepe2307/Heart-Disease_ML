@@ -18,7 +18,7 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        model_path = '/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_app/heart_pipeline.pkl'
+        model_path = 'heart_pipeline.pkl'
         with open(model_path, 'rb') as file:
             model = pickle.load(file)
         return model
