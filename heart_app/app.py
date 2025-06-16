@@ -18,36 +18,19 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        # Model dosyasının yolunu heart_app klasörüne göre ayarla
-        model_path = os.path.join('heart_app', 'heart_model.pkl')
-        
-        if not os.path.exists(model_path):
-            st.error(f"Model dosyası bulunamadı: {model_path}")
-            st.error("Çalışma dizini: " + os.getcwd())
-            st.error("Dizindeki dosyalar: " + str(os.listdir()))
-            return None
-            
+        model_path = 'heart_model.pkl'
         with open(model_path, 'rb') as file:
             model = pickle.load(file)
-            st.success("Model başarıyla yüklendi!")
-            return model
+        return model
     except Exception as e:
         st.error(f"Model yüklenirken hata oluştu: {str(e)}")
         return None
 
 # Model yükleme denemesi
-with st.spinner('Model yükleniyor...'):
-    model = load_model()
-    if model is None:
-        st.error("""
-        Model yüklenemedi. Lütfen aşağıdakileri kontrol edin:
-        1. Model dosyası (heart_model.pkl) heart_app klasöründe olmalı
-        2. Model dosyası doğru formatta olmalı
-        3. Model dosyasına erişim izinleri doğru olmalı
-        
-        Hata detayları için yukarıdaki mesajları kontrol edin.
-        """)
-        st.stop()
+model = load_model()
+if model is None:
+    st.error("Model yüklenemedi. Lütfen model dosyasının doğru konumda olduğundan emin olun.")
+    st.stop()
 
 # Kullanıcı girdileri
 st.subheader("Lütfen aşağıdaki bilgileri giriniz:")
