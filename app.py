@@ -7,24 +7,26 @@ import os
 def add_ratios(X):
     # DataFrame'e dönüştürme
     if isinstance(X, np.ndarray):
-        X = pd.DataFrame(X, columns=['age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
-                                   'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
-                                   'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
-                                   'alcohol_enc', 'stress_enc', 'sleep_hours', 
-                                   'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
-                                   'crp_lvl', 'hmocystesine_lvl'])
+        X = pd.DataFrame(X, columns=[
+            'age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
+            'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
+            'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
+            'alcohol_enc', 'stress_enc', 'sleep_hours', 
+            'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
+            'crp_lvl', 'hmocystesine_lvl'
+        ])
     
     # Kan Basıncı Ve Enfeksiyon Oranı
-    X['bp_crp_ratio'] = X['crp_lvl'] / X['age']
+    X['bp_crp_ratio'] = X['crp_lvl'].astype(float) / X['age'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
-    X['ves_dia_est'] = X['trestbps'] / X['chol']
+    X['ves_dia_est'] = X['trestbps'].astype(float) / X['chol'].astype(float)
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['meal_order_record'] = X['chol'] / X['bmi']
+    X['meal_order_record'] = X['chol'].astype(float) / X['bmi'].astype(float)
     
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
-    X['chol_exe_ratio'] = X['chol'] / X['exercise_enc']
+    X['chol_exe_ratio'] = X['chol'].astype(float) / X['exercise_enc'].astype(float)
     
     return X
 
@@ -126,7 +128,7 @@ if st.button("Tahmin Et"):
             fbs,
             crp_lvl,
             hmocystesine_lvl
-        ]])
+        ]], dtype=float)
         
         # DataFrame'e dönüştürme ve oranları ekleme
         input_df = add_ratios(input_data)
@@ -145,6 +147,7 @@ if st.button("Tahmin Et"):
         st.write(f"Risk Olasılığı: {probability[0][1]*100:.2f}%")
     except Exception as e:
         st.error(f"Tahmin yapılırken bir hata oluştu: {str(e)}")
+        st.write("Hata detayı:", str(e))
 
 # Bilgilendirme
 st.markdown("---")
