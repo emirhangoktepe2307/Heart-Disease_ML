@@ -43,6 +43,7 @@ with col1:
     cp = st.selectbox("Göğüs Ağrısı Tipi", ["Tipik Angina", "Atipik Angina", "Non-Anginal Ağrı", "Asemptomatik"])
     trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=120)
     chol = st.number_input("Kolesterol (mg/dl)", min_value=100, max_value=600, value=200)
+    bmi=st.number_input("Vücut Kitle endeksinizi hesaplayın",min_value=10,max_value=50,value=20)
 
 with col2:
     fbs = st.selectbox("Açlık Kan Şekeri > 120 mg/dl", ["Hayır", "Evet"])
