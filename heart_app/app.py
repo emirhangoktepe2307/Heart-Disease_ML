@@ -18,7 +18,7 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        model_path = 'heart_model.pkl'
+        model_path = 'heart_pipeline.pkl'
         with open(model_path, 'rb') as file:
             model = pickle.load(file)
         return model
@@ -41,31 +41,69 @@ with col1:
     age = st.number_input("Yaş", min_value=1, max_value=120, value=30)
     sex = st.selectbox("Cinsiyet", ["Kadın", "Erkek"])
     cp = st.selectbox("Göğüs Ağrısı Tipi", ["Tipik Angina", "Atipik Angina", "Non-Anginal Ağrı", "Asemptomatik"])
-    trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=120)
-    chol = st.number_input("Kolesterol (mg/dl)", min_value=100, max_value=600, value=200)
-    bmi=st.number_input("Vücut Kitle endeksinizi hesaplayın",min_value=10,max_value=50,value=20)
+    trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=110)
+    chol = st.number_input("Kolesterol (mg/dl) Seviyesini Giriniz:", min_value=100, max_value=600, value=200)
+    bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10, max_value=50, value=20)
+    fbs = st.number_input("Açlık Kan Şekeri Değerinizi Giriniz:", min_value=50, max_value=100, value=20)
+    sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2, max_value=14, value=7)
+    trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_level=400,value=250)
+    crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=1,max_level=14.99,value=5.1)
+    hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=5,max_value=19.99,value=6.5)
 
 with col2:
-    fbs = st.selectbox("Açlık Kan Şekeri > 120 mg/dl", ["Hayır", "Evet"])
-    restecg = st.selectbox("EKG Sonuçları", ["Normal", "ST-T Dalga Anormalliği", "Sol Ventrikül Hipertrofisi"])
+    
     thalach = st.number_input("Maksimum Kalp Atış Hızı", min_value=60, max_value=202, value=150)
-    exang = st.selectbox("Egzersiz Kaynaklı Angina", ["Hayır", "Evet"])
-    oldpeak = st.number_input("ST Depresyonu", min_value=0.0, max_value=6.2, value=0.0, step=0.1)
+    stress= st.selectbox("Stres Seviyeniz Nedir?",["Az","Orta","Çok"])
+    fhd= st.selectbox("Genetik Kalp Krizi Vakası Ailenizde Mevcut Mu?",["Evet","Hayır"])
+    smoking= st.selectbox("Sigara Kullanıyor Musunuz?",["Evet","Hayır"])
+    diabetes=st.selectbox("Şeker Hastalığınız Var Mı?",["Evet","Hayır"])
+    exercise=st.selectbox("Egzersiz Sıklığınız Nedir?",["Az","Orta","Çok"])
+    alcohol= st.selectbox("Alkol Tüketme Sıklığınız Nedir",["Az","Orta","Çok"])
+    high_blo_pre=st.selectbox("Yüksek Tansiyon Hastalığınız Var Mı?",["Evet","Hayır"])
+    hdl=st.selectbox("İyi Kolesterol (HDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
+    ldl=st.selectbox("Kötü Kolesterol (LDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
+    sugar_cons=st.selectbox("Günlük Şeker Tüketme Sıklığınız",["Az","Orta","Çok"])
 
-# Veri dönüşümleri
-sex = 1 if sex == "Erkek" else 0
-cp = ["Tipik Angina", "Atipik Angina", "Non-Anginal Ağrı", "Asemptomatik"].index(cp)
-fbs = 1 if fbs == "Evet" else 0
-restecg = ["Normal", "ST-T Dalga Anormalliği", "Sol Ventrikül Hipertrofisi"].index(restecg)
-exang = 1 if exang == "Evet" else 0
-
+# Veri encode dönüşümleri
+sex_enc = {"Erkek":1, "Kadın":0}[sex]
+diabetes_enc= {"Evet":1, "Hayır":0}[diabetes]
+fhd_enc={"Evet":1, "Hayır":0}[fhd]
+smoking_enc={"Evet":1, "Hayır":0}[smoking]
+exercise_enc={"Çok":1, "Orta":2, "Az":3}[exercise]
+stress_enc={"Az":1, "Orta":2, "Çok":3}[stress]
+alcohol_enc = {"Az": 0, "Orta": 1, "Çok": 2}[alcohol]
+high_blo_pre_enc={"Evet":1, "Hayır":0}[high_blo_pre]
+hdl_enc={"Evet":0,"Hayır":1}[hdl]
+ldl_enc={"Evet":1,"Hayır":0}[ldl]
+sugar_cons_enc={"Az":0,"Orta":1,"Çok":2}
 # Tahmin butonu
 if st.button("Tahmin Et"):
     try:
-        # Girdileri diziye dönüştürme
-        input_data = np.array([[age, sex, cp, trestbps, chol, fbs, restecg, thalach, exang, oldpeak]])
+        # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
+        input_data = np.array([[
+            age, 
+            sex, 
+            trestbps, 
+            chol, 
+            exercise_enc, 
+            smoking_enc, 
+            fhd_enc, 
+            diabetes_enc, 
+            bmi, 
+            high_blo_pre_enc, 
+            hdl_enc, 
+            ldl_enc, 
+            alcohol_enc, 
+            stress_enc, 
+            sleep_hours, 
+            sugar_cons_enc,
+            trglycrde_lvl,
+            fbs,
+            crp_lvl,
+            hmocystesine_lvl
+            ]])
         
-        # Tahmin yapma
+        # Tahminleme
         prediction = model.predict(input_data)
         probability = model.predict_proba(input_data)
         
