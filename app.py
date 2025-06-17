@@ -70,9 +70,18 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        model_path = 'heart_pipeline.pkl'
+        # Tam yolu kullan
+        current_dir = os.path.dirname(os.path.abspath(__file__))
+        model_path = os.path.join(current_dir, 'heart_pipeline.pkl')
+        
+        st.write(f"Model dosyası aranıyor: {model_path}")
+        
         if not os.path.exists(model_path):
             st.error(f"Model dosyası bulunamadı: {model_path}")
+            # Mevcut dizindeki dosyaları listele
+            st.write("Mevcut dizindeki dosyalar:")
+            for file in os.listdir(current_dir):
+                st.write(f"- {file}")
             return None
             
         with open(model_path, 'rb') as file:
