@@ -14,7 +14,7 @@ import pandas as pd
 import joblib, os
 
 # Veri yükleme
-path = "Streamlit_ML/heart_disease.csv"
+path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease.csv"
 df = pd.read_csv(path)
 
 # Görselleştirme fonksiyonları
@@ -111,7 +111,7 @@ def main():
         ("clf", RandomForestClassifier(class_weight="balanced", random_state=42))
     ])
 
-    df.to_csv("Streamlit_ML/heart_disease_feature.csv", index=False)
+    df.to_csv("/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease_feature.csv", index=False)
 
     # Veri ayrımı
     X = df_processed.drop("Heart Disease Status", axis=1)
@@ -122,11 +122,8 @@ def main():
     pipe.fit(X_train, y_train)
     
     # Model kaydetme
-    save_path = "heart_pipeline.joblib"
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    joblib.dump(pipe, save_path)
-    print(f"✅ Pipeline başarıyla kaydedildi → {save_path}")
-    
+    joblib.dump(pipe, "heart_pipeline.joblib")
+      
     # Model değerlendirme
     y_pred = pipe.predict(X_test)
     print("\nModel Performans Metrikleri:")
