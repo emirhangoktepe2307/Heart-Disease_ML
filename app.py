@@ -23,9 +23,11 @@ def add_ratios(X):
             'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
             'alcohol_enc', 'stress_enc', 'sleep_hours', 
             'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
-            'crp_lvl', 'hmocystesine_lvl','bp_crp_ratio','ves_dia_est','meal_order_record',
-            'chol_exe_ratio'
+            'crp_lvl', 'hmocystesine_lvl'
         ])
+    
+    # Triglyceride seviyesini kategorize et
+    X['Ves_Hardness'] = X['trglycrde_lvl'].apply(categorize_triglyceride)
     
     # Kan Basıncı Ve Enfeksiyon Oranı
     X['bp_crp_ratio'] = X['crp_lvl'].astype(float) / X['trestbps'].astype(float)
@@ -39,8 +41,17 @@ def add_ratios(X):
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
     X['chol_exe_ratio'] = X['chol'].astype(float) / X['exercise_enc'].astype(float)
     
-    # Triglyceride seviyesini kategorize et
-    X['Ves_Hardness'] = X['trglycrde_lvl'].apply(categorize_triglyceride)
+    # Sütun sırasını modelin beklediği sıraya göre düzenle
+    X = X[[
+        'age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
+        'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
+        'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
+        'alcohol_enc', 'stress_enc', 'sleep_hours', 
+        'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
+        'crp_lvl', 'hmocystesine_lvl', 'Ves_Hardness',
+        'bp_crp_ratio', 'ves_dia_est', 'meal_order_record',
+        'chol_exe_ratio'
+    ]]
     
     return X
 
