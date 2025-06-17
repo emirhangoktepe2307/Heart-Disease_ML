@@ -4,7 +4,10 @@ import numpy as np
 import pandas as pd
 import os
 
-df=pd.read_csv("/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease_feature.csv")
+# Dosya yolunu göreceli olarak ayarla
+current_dir = os.path.dirname(os.path.abspath(__file__))
+csv_path = os.path.join(current_dir, 'heart_disease_feature.csv')
+df = pd.read_csv(csv_path)
 
 def categorize_triglyceride(level):
     if pd.isna(level):  # NaN değerleri kontrol et
