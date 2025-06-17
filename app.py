@@ -4,6 +4,16 @@ import numpy as np
 import pandas as pd
 import os
 
+def categorize_triglyceride(level):
+    if pd.isna(level):  # NaN değerleri kontrol et
+        return np.nan
+    elif level < 100:
+        return 0
+    elif 100 <= level < 150:
+        return 1
+    else:  # level > 150
+        return 2
+
 def add_ratios(X):
     # DataFrame'e dönüştürme
     if isinstance(X, np.ndarray):
@@ -13,11 +23,12 @@ def add_ratios(X):
             'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
             'alcohol_enc', 'stress_enc', 'sleep_hours', 
             'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
-            'crp_lvl', 'hmocystesine_lvl'
+            'crp_lvl', 'hmocystesine_lvl','bp_crp_ratio','ves_dia_est','meal_order_record',
+            'chol_exe_ratio'
         ])
     
     # Kan Basıncı Ve Enfeksiyon Oranı
-    X['bp_crp_ratio'] = X['crp_lvl'].astype(float) / X['age'].astype(float)
+    X['bp_crp_ratio'] = X['crp_lvl'].astype(float) / X['trestbps'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
     X['ves_dia_est'] = X['trestbps'].astype(float) / X['chol'].astype(float)
@@ -27,6 +38,9 @@ def add_ratios(X):
     
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
     X['chol_exe_ratio'] = X['chol'].astype(float) / X['exercise_enc'].astype(float)
+    
+    # Triglyceride seviyesini kategorize et
+    X['Ves_Hardness'] = X['trglycrde_lvl'].apply(categorize_triglyceride)
     
     return X
 
