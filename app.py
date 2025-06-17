@@ -158,6 +158,10 @@ if st.button("Tahmin Et"):
         # DataFrame'e dönüştürme ve oranları ekleme
         input_df = add_ratios(input_data)
         
+        # Model özelliklerini kontrol et
+        st.write("Model özellikleri:", model.feature_names_in_)
+        st.write("Girdi özellikleri:", input_df.columns.tolist())
+        
         # Tahminleme
         prediction = model.predict(input_df)
         probability = model.predict_proba(input_df)
@@ -173,6 +177,9 @@ if st.button("Tahmin Et"):
     except Exception as e:
         st.error(f"Tahmin yapılırken bir hata oluştu: {str(e)}")
         st.write("Hata detayı:", str(e))
+        st.write("Model tipi:", type(model))
+        if hasattr(model, 'feature_names_in_'):
+            st.write("Model özellikleri:", model.feature_names_in_)
 
 # Bilgilendirme
 st.markdown("---")
