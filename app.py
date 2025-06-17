@@ -1,8 +1,10 @@
 import streamlit as st
-import pickle
+import joblib
 import numpy as np
 import pandas as pd
 import os
+
+df=pd.read_csv("/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease_feature.csv")
 
 def categorize_triglyceride(level):
     if pd.isna(level):  # NaN değerleri kontrol et
@@ -72,7 +74,7 @@ def load_model():
     try:
         # Tam yolu kullan
         current_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(current_dir, 'heart_pipeline.pkl')
+        model_path = os.path.join(current_dir, 'heart_pipeline.joblib')
         
         st.write(f"Model dosyası aranıyor: {model_path}")
         
@@ -84,14 +86,13 @@ def load_model():
                 st.write(f"- {file}")
             return None
             
-        with open(model_path, 'rb') as file:
-            try:
-                model = pickle.load(file)
-                st.success("Model başarıyla yüklendi!")
-                return model
-            except Exception as e:
-                st.error(f"Model dosyası yüklenirken hata oluştu: {str(e)}")
-                return None
+        try:
+            model = joblib.load(model_path)
+            st.success("Model başarıyla yüklendi!")
+            return model
+        except Exception as e:
+            st.error(f"Model dosyası yüklenirken hata oluştu: {str(e)}")
+            return None
     except Exception as e:
         st.error(f"Model yüklenirken beklenmeyen bir hata oluştu: {str(e)}")
         return None
@@ -122,8 +123,8 @@ with col1:
     bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10, max_value=50, value=20)
     fbs = st.number_input("Açlık Kan Şekeri Değerinizi Giriniz:", min_value=50, max_value=100, value=20)
     sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2, max_value=14, value=7)
-    trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_level=400,value=250)
-    crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=1,max_level=14.99,value=5.1)
+    trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_value=400,value=250)
+    crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=1,max_value=14.99,value=5.1)
     hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=5,max_value=19.99,value=6.5)
 
 with col2:
