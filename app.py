@@ -71,11 +71,20 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 def load_model():
     try:
         model_path = 'heart_pipeline.pkl'
+        if not os.path.exists(model_path):
+            st.error(f"Model dosyası bulunamadı: {model_path}")
+            return None
+            
         with open(model_path, 'rb') as file:
-            model = pickle.load(file)
-        return model
+            try:
+                model = pickle.load(file)
+                st.success("Model başarıyla yüklendi!")
+                return model
+            except Exception as e:
+                st.error(f"Model dosyası yüklenirken hata oluştu: {str(e)}")
+                return None
     except Exception as e:
-        st.error(f"Model yüklenirken hata oluştu: {str(e)}")
+        st.error(f"Model yüklenirken beklenmeyen bir hata oluştu: {str(e)}")
         return None
 
 # Model yükleme denemesi
@@ -83,6 +92,13 @@ model = load_model()
 if model is None:
     st.error("Model yüklenemedi. Lütfen model dosyasının doğru konumda olduğundan emin olun.")
     st.stop()
+
+# Model tipini ve özelliklerini kontrol et
+st.write("Model tipi:", type(model))
+if hasattr(model, 'feature_names_in_'):
+    st.write("Model özellikleri:", model.feature_names_in_)
+else:
+    st.warning("Model özellik isimleri bulunamadı!")
 
 # Kullanıcı girdileri
 st.subheader("Lütfen aşağıdaki bilgileri giriniz:")
@@ -133,27 +149,27 @@ if st.button("Tahmin Et"):
     try:
         # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
         input_data = np.array([[
-            age, 
-            sex_enc, 
-            trestbps, 
-            chol, 
-            exercise_enc, 
-            smoking_enc, 
-            fhd_enc, 
-            diabetes_enc, 
-            bmi, 
-            high_blo_pre_enc, 
-            hdl_enc, 
-            ldl_enc, 
-            alcohol_enc, 
-            stress_enc, 
-            sleep_hours, 
-            sugar_cons_enc,
-            trglycrde_lvl,
-            fbs,
-            crp_lvl,
-            hmocystesine_lvl
-        ]], dtype=float)
+            float(age), 
+            int(sex_enc), 
+            float(trestbps), 
+            float(chol), 
+            int(exercise_enc), 
+            int(smoking_enc), 
+            int(fhd_enc), 
+            int(diabetes_enc), 
+            float(bmi), 
+            int(high_blo_pre_enc), 
+            int(hdl_enc), 
+            int(ldl_enc), 
+            int(alcohol_enc), 
+            int(stress_enc), 
+            float(sleep_hours), 
+            int(sugar_cons_enc),
+            float(trglycrde_lvl),
+            float(fbs),
+            float(crp_lvl),
+            float(hmocystesine_lvl)
+        ]])
         
         # DataFrame'e dönüştürme ve oranları ekleme
         input_df = add_ratios(input_data)
