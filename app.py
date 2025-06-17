@@ -124,7 +124,7 @@ with col1:
     trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=110)
     chol = st.number_input("Kolesterol (mg/dl) Seviyesini Giriniz:", min_value=100, max_value=600, value=200)
     bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10, max_value=50, value=20)
-    fbs = st.number_input("Açlık Kan Şekeri Değerinizi Giriniz:", min_value=50, max_value=100, value=20)
+    fbs = st.number_input("Açlık Kan Şekeri Değerinizi Giriniz:", min_value=20, max_value=100, value=50)
     sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2, max_value=14, value=7)
     trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_value=400,value=250)
     crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=1,max_value=14.99,value=5.1)
