@@ -14,7 +14,8 @@ import pandas as pd
 import joblib, os
 
 # Veri yükleme
-path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease.csv"
+current_dir = os.path.dirname(os.path.abspath(__file__))
+path = os.path.join(current_dir, "heart_disease.csv")
 df = pd.read_csv(path)
 
 # Görselleştirme fonksiyonları
@@ -119,16 +120,18 @@ def main():
         ("clf", RandomForestClassifier(class_weight="balanced", random_state=42))
     ])
 
-    df.to_csv("/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_disease_feature.csv", index=False)
+    # CSV dosyasını kaydet
+    csv_save_path = os.path.join(current_dir, 'heart_disease_feature.csv')
+    df.to_csv(csv_save_path, index=False)
+    print(f"✅ CSV dosyası kaydedildi → {csv_save_path}")
     
     # Model eğitimi
     pipe.fit(X_train_resampled, y_train_resampled)
     
     # Model kaydetme
-    save_path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_pipeline.joblib"
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    joblib.dump(pipe, save_path)
-    print(f"✅ Pipeline başarıyla kaydedildi → {save_path}")
+    model_save_path = os.path.join(current_dir, 'heart_pipeline.joblib')
+    joblib.dump(pipe, model_save_path)
+    print(f"✅ Pipeline başarıyla kaydedildi → {model_save_path}")
       
     # Model değerlendirme
     y_pred = pipe.predict(X_test)

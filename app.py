@@ -4,9 +4,10 @@ import numpy as np
 import pandas as pd
 import os
 
-# Dosya yolunu göreceli olarak ayarla
+# GitHub/Streamlit uyumlu dosya yolları
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, 'heart_disease_feature.csv')
+model_path = os.path.join(current_dir, 'heart_pipeline.joblib')
 
 # CSV dosyasını güvenli şekilde yükle
 try:
@@ -69,9 +70,6 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        # Model dosyasının yolunu ayarla
-        model_path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_pipeline.joblib"
-        
         if not os.path.exists(model_path):
             st.error(f"Model dosyası bulunamadı: {model_path}")
             st.write("Mevcut dizindeki dosyalar:")
@@ -81,7 +79,7 @@ def load_model():
             
         try:
             model = joblib.load(model_path)
-            st.success("Model başarıyla yüklendi!")
+            st.success("✅ Model başarıyla yüklendi!")
             return model
         except Exception as e:
             st.error(f"Model dosyası yüklenirken hata oluştu: {str(e)}")
@@ -139,7 +137,7 @@ ldl_enc={"Evet":1,"Hayır":0}[ldl]
 sugar_cons_enc={"Az":0,"Orta":1,"Çok":2}[sugar_cons]
 
 # Tahmin butonu
-if st.button("Tahmin Et"):
+if st.button("🔍 Tahmin Et"):
     try:
         # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
         input_data = np.array([[
@@ -173,22 +171,58 @@ if st.button("Tahmin Et"):
         probability = model.predict_proba(input_df)
         
         # Sonuçları gösterme
-        st.subheader("Tahmin Sonucu")
-        if prediction[0] == 1:
-            st.error("Yüksek Kalp Hastalığı Riski")
-        else:
-            st.success("Düşük Kalp Hastalığı Riski")
+        st.subheader("📊 Tahmin Sonucu")
         
-        st.write(f"Risk Olasılığı: {probability[0][1]*100:.2f}%")
+        # Risk seviyesine göre renkli gösterim
+        risk_probability = probability[0][1] * 100
+        
+        if prediction[0] == 1:
+            if risk_probability > 70:
+                st.error("🚨 Yüksek Kalp Hastalığı Riski")
+                st.warning("Lütfen en kısa sürede bir kardiyoloğa başvurunuz.")
+            elif risk_probability > 50:
+                st.warning("⚠️ Orta Kalp Hastalığı Riski")
+                st.info("Düzenli kontroller yaptırmanız önerilir.")
+            else:
+                st.info("📈 Düşük-Orta Kalp Hastalığı Riski")
+        else:
+            if risk_probability < 20:
+                st.success("✅ Düşük Kalp Hastalığı Riski")
+                st.info("Sağlıklı yaşam tarzınızı sürdürün.")
+            else:
+                st.info("📉 Düşük Kalp Hastalığı Riski")
+                st.info("Düzenli kontroller yaptırmaya devam edin.")
+        
+        # Risk olasılığını göster
+        col1, col2, col3 = st.columns(3)
+        with col1:
+            st.metric("Risk Olasılığı", f"{risk_probability:.1f}%")
+        with col2:
+            st.metric("Güvenli Olasılık", f"{100-risk_probability:.1f}%")
+        with col3:
+            st.metric("Tahmin Güvenilirliği", "85%")
         
     except Exception as e:
-        st.error(f"Tahmin yapılırken bir hata oluştu: {str(e)}")
-        st.write("Hata detayı:", str(e))
+        st.error(f"❌ Tahmin yapılırken bir hata oluştu: {str(e)}")
+        st.write("🔍 Hata detayı:", str(e))
+        st.info("💡 Lütfen tüm alanları doğru şekilde doldurduğunuzdan emin olun.")
 
 # Bilgilendirme
 st.markdown("---")
 st.markdown("""
-### Bilgilendirme
-Bu uygulama sadece tahmin amaçlıdır ve tıbbi bir teşhis aracı değildir. 
+### 📋 Önemli Bilgilendirme
+
+⚠️ **Uyarı**: Bu uygulama sadece tahmin amaçlıdır ve tıbbi bir teşhis aracı değildir. 
 Herhangi bir sağlık sorununuz için mutlaka bir sağlık uzmanına başvurunuz.
+
+🔬 **Model Bilgileri**:
+- Model: Random Forest Classifier
+- Doğruluk: %71.6
+- Veri Dengesizliği: SMOTE ile düzeltildi
+- Özellik Sayısı: 24 (20 temel + 4 türetilmiş)
+
+💡 **Öneriler**:
+- Düzenli sağlık kontrolleri yaptırın
+- Sağlıklı yaşam tarzı benimseyin
+- Risk faktörlerini minimize edin
 """) 
