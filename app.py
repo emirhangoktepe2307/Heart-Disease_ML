@@ -128,11 +128,11 @@ with col1:
     sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2, max_value=14, value=7)
     trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_value=400,value=250)
     crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=0.1,max_value=14.99,value=5.1)
-    hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=0.1,max_value=19.99,value=6.5)
+    hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=5.0,max_value=19.99,value=6.5)
 
 with col2:
+
     
-    thalach = st.number_input("Maksimum Kalp Atış Hızı", min_value=60, max_value=202, value=150)
     stress= st.selectbox("Stres Seviyeniz Nedir?",["Az","Orta","Çok"])
     fhd= st.selectbox("Genetik Kalp Krizi Vakası Ailenizde Mevcut Mu?",["Evet","Hayır"])
     smoking= st.selectbox("Sigara Kullanıyor Musunuz?",["Evet","Hayır"])
@@ -155,7 +155,7 @@ alcohol_enc = {"Az": 0, "Orta": 1, "Çok": 2}[alcohol]
 high_blo_pre_enc={"Evet":1, "Hayır":0}[high_blo_pre]
 hdl_enc={"Evet":0,"Hayır":1}[hdl]
 ldl_enc={"Evet":1,"Hayır":0}[ldl]
-sugar_cons_enc={"Az":0,"Orta":1,"Çok":2}
+sugar_cons_enc={"Az":0,"Orta":1,"Çok":2}[sugar_cons]
 
 # Tahmin butonu
 if st.button("Tahmin Et"):
