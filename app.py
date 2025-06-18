@@ -26,19 +26,19 @@ def add_ratios(X):
             'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
             'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
             'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
-            'Alcohol Consumption', 'Stress', 'Sleep Hours', 
-            'Sugar Intake', 'Triglycerides', 'Fasting Blood Sugar', 
+            'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
+            'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
             'CRP', 'Homocysteine Level'
         ])
     
     # Triglyceride seviyesini kategorize et
-    X['Ves_Hardness'] = X['Triglycerides'].apply(categorize_triglyceride)
+    X['Ves_Hardness'] = X['Triglyceride Level'].apply(categorize_triglyceride)
     
     # Kan Basıncı Ve Enfeksiyon Oranı
     X['Bp/Crp'] = X['CRP'].astype(float) / X['Blood Pressure'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
-    X['Ves_Dia_Est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
+    X['Ves_dia_est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
     X['Meal order record'] = X['Cholesterol'].astype(float) / X['BMI'].astype(float)
@@ -51,10 +51,10 @@ def add_ratios(X):
         'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
         'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
         'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
-        'Alcohol Consumption', 'Stress', 'Sleep Hours', 
-        'Sugar Intake', 'Triglycerides', 'Fasting Blood Sugar', 
+        'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
+        'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
         'CRP', 'Homocysteine Level', 'Ves_Hardness',
-        'Bp/Crp', 'Ves_Dia_Est', 'Meal order record',
+        'Bp/Crp', 'Ves_dia_est', 'Meal order record',
         'Chol/Exe'
     ]]
     
