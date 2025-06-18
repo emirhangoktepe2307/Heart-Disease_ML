@@ -9,11 +9,13 @@ import seaborn as sns
 # GitHub/Streamlit uyumlu dosya yolları
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, 'heart_disease_feature.csv')
+csv_path_first= os.path.join(current_dir, 'heart_disease.csv')
 model_path = os.path.join(current_dir, 'heart_pipeline.joblib')
 
 # CSV dosyasını güvenli şekilde yükle
 try:
     df = pd.read_csv(csv_path)
+    df_first=pd.read_csv(csv_path_first)
 except FileNotFoundError:
     st.error(f"CSV dosyası bulunamadı: {csv_path}")
     st.stop()
@@ -268,7 +270,12 @@ elif page == "📈 SUNUM":
         col1, col2 = st.columns(2)
         
         with col1:
-            st.subheader("📋 Veri Seti Özeti")
+            st.subheader("📋 Veri Seti İlk Durum Özeti")
+            st.write(f"**Toplam Kayıt Sayısı:** {len(df_first)}")
+            st.write(f"**Özellik Sayısı:** {len(df_first.columns)}")
+            st.write(f"**Eksik Veri Oranı:** %{df_first.isnull().sum().sum() / (len(df_first) * len(df_first.columns)) * 100:.2f}")
+
+            st.subheader("📋 Veri Seti Son Durum Özeti")
             st.write(f"**Toplam Kayıt Sayısı:** {len(df)}")
             st.write(f"**Özellik Sayısı:** {len(df.columns)}")
             st.write(f"**Eksik Veri Oranı:** %{df.isnull().sum().sum() / (len(df) * len(df.columns)) * 100:.2f}")
