@@ -48,13 +48,14 @@ def add_ratios(X):
     
     # Sütun sırasını modelin beklediği sıraya göre düzenle
     X = X[[
-        'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level',
-       'Exercise Habits', 'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI',
-       'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol',
-       'Alcohol Consumption', 'Stress Level', 'Sleep Hours',
-       'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar',
-       'CRP Level', 'Homocysteine Level', 'Ves_Hardness', 'Bp/Crp',
-       'Ves_dia_est', 'Meal order record', 'Chol/Exe'
+        'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level', 'Exercise Habits', 
+        'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
+        'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
+        'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
+        'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
+        'CRP Level', 'Homocysteine Level', 'Ves_Hardness',
+        'Bp/Crp', 'Ves_dia_est', 'Meal order record',
+        'Chol/Exe'
     ]]
     
     return X
