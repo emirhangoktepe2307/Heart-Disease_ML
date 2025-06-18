@@ -23,39 +23,39 @@ def add_ratios(X):
     # DataFrame'e dönüştürme
     if isinstance(X, np.ndarray):
         X = pd.DataFrame(X, columns=[
-            'age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
-            'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
-            'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
-            'alcohol_enc', 'stress_enc', 'sleep_hours', 
-            'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
-            'crp_lvl', 'hmocystesine_lvl'
+            'Age', 'Sex', 'Blood Pressure', 'Cholesterol', 'Exercise Frequency', 
+            'Smoking Status', 'Family History', 'Diabetes Status', 'BMI', 
+            'High Blood Pressure', 'HDL Level', 'LDL Level', 
+            'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
+            'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
+            'CRP Level', 'Homocysteine Level'
         ])
     
     # Triglyceride seviyesini kategorize et
-    X['Ves_Hardness'] = X['trglycrde_lvl'].apply(categorize_triglyceride)
+    X['Ves_Hardness'] = X['Triglyceride Level'].apply(categorize_triglyceride)
     
     # Kan Basıncı Ve Enfeksiyon Oranı
-    X['bp_crp_ratio'] = X['crp_lvl'].astype(float) / X['trestbps'].astype(float)
+    X['Bp/Crp'] = X['CRP Level'].astype(float) / X['Blood Pressure'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
-    X['ves_dia_est'] = X['trestbps'].astype(float) / X['chol'].astype(float)
+    X['Ves_Dia_Est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['meal_order_record'] = X['chol'].astype(float) / X['bmi'].astype(float)
+    X['Meal_Order_Record'] = X['Cholesterol'].astype(float) / X['BMI'].astype(float)
     
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
-    X['chol_exe_ratio'] = X['chol'].astype(float) / X['exercise_enc'].astype(float)
+    X['Chol_Exe_Ratio'] = X['Cholesterol'].astype(float) / X['Exercise Frequency'].astype(float)
     
     # Sütun sırasını modelin beklediği sıraya göre düzenle
     X = X[[
-        'age', 'sex', 'trestbps', 'chol', 'exercise_enc', 
-        'smoking_enc', 'fhd_enc', 'diabetes_enc', 'bmi', 
-        'high_blo_pre_enc', 'hdl_enc', 'ldl_enc', 
-        'alcohol_enc', 'stress_enc', 'sleep_hours', 
-        'sugar_cons_enc', 'trglycrde_lvl', 'fbs', 
-        'crp_lvl', 'hmocystesine_lvl', 'Ves_Hardness',
-        'bp_crp_ratio', 'ves_dia_est', 'meal_order_record',
-        'chol_exe_ratio'
+        'Age', 'Sex', 'Blood Pressure', 'Cholesterol', 'Exercise Frequency', 
+        'Smoking Status', 'Family History', 'Diabetes Status', 'BMI', 
+        'High Blood Pressure', 'HDL Level', 'LDL Level', 
+        'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
+        'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
+        'CRP Level', 'Homocysteine Level', 'Ves_Hardness',
+        'Bp/Crp', 'Ves_Dia_Est', 'Meal_Order_Record',
+        'Chol_Exe_Ratio'
     ]]
     
     return X
