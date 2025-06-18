@@ -21,14 +21,18 @@ except FileNotFoundError:
     st.stop()
 
 def categorize_triglyceride(level):
-    if pd.isna(level):  # NaN değerleri kontrol et
-        return np.nan
-    elif level < 100:
-        return 0
-    elif 100 <= level < 150:
-        return 1
-    else:  # level > 150
-        return 2
+    try:
+        if pd.isna(level) or level is None:  # NaN ve None değerleri kontrol et
+            return np.nan
+        level = float(level)  # Sayıya dönüştür
+        if level < 100:
+            return 0
+        elif 100 <= level < 150:
+            return 1
+        else:  # level >= 150
+            return 2
+    except (ValueError, TypeError):
+        return np.nan  # Geçersiz değerler için NaN döndür
 
 def add_ratios(X):
     # DataFrame'e dönüştürme
@@ -45,17 +49,33 @@ def add_ratios(X):
     # Triglyceride seviyesini kategorize et
     X['Ves_Hardness'] = X['Triglyceride Level'].apply(categorize_triglyceride)
     
-    # Kan Basıncı Ve Enfeksiyon Oranı
-    X['Bp/Crp'] = X['CRP Level'].astype(float) / X['Blood Pressure'].astype(float)
+    # Kan Basıncı Ve Enfeksiyon Oranı - Sıfıra bölme kontrolü
+    X['Bp/Crp'] = np.where(
+        (X['Blood Pressure'].astype(float) != 0) & (X['CRP Level'].astype(float) != 0),
+        X['CRP Level'].astype(float) / X['Blood Pressure'].astype(float),
+        0
+    )
     
-    # Kolesterol ve Kan Basıncı Oranı
-    X['Ves_dia_est'] = X['Blood Pressure'].astype(float) / X['Cholesterol Level'].astype(float)
+    # Kolesterol ve Kan Basıncı Oranı - Sıfıra bölme kontrolü
+    X['Ves_dia_est'] = np.where(
+        (X['Cholesterol Level'].astype(float) != 0) & (X['Blood Pressure'].astype(float) != 0),
+        X['Blood Pressure'].astype(float) / X['Cholesterol Level'].astype(float),
+        0
+    )
     
-    # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['Meal order record'] = X['Cholesterol Level'].astype(float) / X['BMI'].astype(float)
+    # Yemek Skoru - Sıfıra bölme kontrolü
+    X['Meal order record'] = np.where(
+        (X['BMI'].astype(float) != 0) & (X['Cholesterol Level'].astype(float) != 0),
+        X['Cholesterol Level'].astype(float) / X['BMI'].astype(float),
+        0
+    )
     
-    # Egzersiz Durumuna Bağlı Kolesterol Oranı
-    X['Chol/Exe'] = X['Cholesterol Level'].astype(float) / X['Exercise Habits'].astype(float)
+    # Egzersiz Durumuna Bağlı Kolesterol Oranı - Sıfıra bölme kontrolü
+    X['Chol/Exe'] = np.where(
+        (X['Exercise Habits'].astype(float) != 0) & (X['Cholesterol Level'].astype(float) != 0),
+        X['Cholesterol Level'].astype(float) / X['Exercise Habits'].astype(float),
+        0
+    )
     
     return X
 
