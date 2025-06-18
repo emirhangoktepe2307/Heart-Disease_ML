@@ -119,6 +119,7 @@ def main():
         ("ratios", ratio_tf),
         ("clf", RandomForestClassifier(class_weight="balanced", random_state=42))
     ])
+    
 
     # CSV dosyasını kaydet
     csv_save_path = os.path.join(current_dir, 'heart_disease_feature.csv')
