@@ -81,33 +81,47 @@ def add_ratios(X):
 
 # Görselleştirme fonksiyonları
 def plot_categorical_distributions(df):
-    cat_cols = df.select_dtypes("object").columns
-    for col in cat_cols:
-        fig, ax = plt.subplots(figsize=(8, 4))
-        sns.countplot(y=col, data=df, order=df[col].value_counts().index, ax=ax)
-        ax.set_title(f"{col} Frekans Dağılımı")
-        plt.tight_layout()
-        st.pyplot(fig)
-        plt.close()
+    try:
+        cat_cols = df.select_dtypes("object").columns
+        if len(cat_cols) == 0:
+            st.info("📊 Kategorik değişken bulunamadı.")
+            return
+            
+        for col in cat_cols:
+            fig, ax = plt.subplots(figsize=(8, 4))
+            sns.countplot(y=col, data=df, order=df[col].value_counts().index, ax=ax)
+            ax.set_title(f"{col} Frekans Dağılımı")
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close()
+    except Exception as e:
+        st.error(f"📊 Kategorik değişken görselleştirme hatası: {str(e)}")
 
 def plot_numerical_distributions(df):
-    num_cols = df.select_dtypes(include=["number"]).columns
-    for col in num_cols:
-        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
-        
-        # Histogram
-        sns.histplot(df[col].dropna(), kde=True, ax=ax1)
-        ax1.set_title(f"{col} Dağılımı (Histogram + KDE)")
-        ax1.set_xlabel(col)
-        ax1.set_ylabel("Frekans")
-        
-        # Box plot
-        sns.boxplot(x=df[col].dropna(), color="skyblue", ax=ax2)
-        ax2.set_title(f"{col} Box-plot (Uç Değer Kontrolü)")
-        
-        plt.tight_layout()
-        st.pyplot(fig)
-        plt.close()
+    try:
+        num_cols = df.select_dtypes(include=["number"]).columns
+        if len(num_cols) == 0:
+            st.info("📈 Sayısal değişken bulunamadı.")
+            return
+            
+        for col in num_cols:
+            fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(8, 6))
+            
+            # Histogram
+            sns.histplot(df[col].dropna(), kde=True, ax=ax1)
+            ax1.set_title(f"{col} Dağılımı (Histogram + KDE)")
+            ax1.set_xlabel(col)
+            ax1.set_ylabel("Frekans")
+            
+            # Box plot
+            sns.boxplot(x=df[col].dropna(), color="skyblue", ax=ax2)
+            ax2.set_title(f"{col} Box-plot (Uç Değer Kontrolü)")
+            
+            plt.tight_layout()
+            st.pyplot(fig)
+            plt.close()
+    except Exception as e:
+        st.error(f"📈 Sayısal değişken görselleştirme hatası: {str(e)}")
 
 # Sayfa yapılandırması
 st.set_page_config(
@@ -170,9 +184,9 @@ if page == "🏠 Ana Sayfa":
         sex = st.selectbox("Cinsiyet", ["Kadın", "Erkek"])
         trestbps = st.number_input("Dinlenme Kan Basıncı (mm Hg)", min_value=90, max_value=200, value=110)
         chol = st.number_input("Kolesterol (mg/dl) Seviyesini Giriniz:", min_value=100, max_value=600, value=200)
-        bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10.0, max_value=50.0, value=20.0,step=0.1)
+        bmi = st.number_input("Vücut Kitle İndeksinizi Giriniz:", min_value=10.0, max_value=50.0, value=20.0)
         fbs = st.number_input("Açlık Kan Şekeri Değerinizi Giriniz:", min_value=20, max_value=100, value=50)
-        sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2, max_value=14, value=7,step=0.5)
+        sleep_hours=st.number_input("Rutin Uyku Saatinizi (Ortalama) Giriniz:", min_value=2.0, max_value=14.0, value=7.0)
         trglycrde_lvl=st.number_input("Kan Tahlilinizde Saptanan Trigliserit Değerini Giriniz",min_value=100,max_value=400,value=250)
         crp_lvl=st.number_input("Kan Tahlilinizde Saptanan Enfeksiyon (CRP) Değerinizi Giriniz",min_value=0.1,max_value=14.99,value=5.1)
         hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=5.0,max_value=19.99,value=6.5)
@@ -205,6 +219,11 @@ if page == "🏠 Ana Sayfa":
     # Tahmin butonu
     if st.button("🔍 Tahmin Et"):
         try:
+            # Girdi değerlerini kontrol et
+            if not all([age, trestbps, chol, bmi, fbs, sleep_hours, trglycrde_lvl, crp_lvl, hmocystesine_lvl]):
+                st.error("❌ Lütfen tüm sayısal alanları doldurunuz.")
+                st.stop()
+            
             # Girdileri diziye dönüştürme (Eğitim veriseti sırasına uygun)
             input_data = np.array([[
                 float(age), 
@@ -231,6 +250,11 @@ if page == "🏠 Ana Sayfa":
             
             # DataFrame'e dönüştürme ve oranları ekleme
             input_df = add_ratios(input_data)
+            
+            # NaN değerleri kontrol et ve doldur
+            if input_df.isnull().any().any():
+                st.warning("⚠️ Bazı hesaplanan değerler eksik, varsayılan değerler kullanılıyor.")
+                input_df = input_df.fillna(0)
             
             # Tahminleme
             prediction = model.predict(input_df)
@@ -268,6 +292,12 @@ if page == "🏠 Ana Sayfa":
             with col3:
                 st.metric("Tahmin Güvenilirliği", "85%")
             
+        except ValueError as ve:
+            st.error(f"❌ Geçersiz değer hatası: {str(ve)}")
+            st.info("💡 Lütfen tüm alanları geçerli değerlerle doldurunuz.")
+        except ZeroDivisionError as zde:
+            st.error(f"❌ Sıfıra bölme hatası: {str(zde)}")
+            st.info("💡 Lütfen tüm değerlerin sıfırdan farklı olduğundan emin olunuz.")
         except Exception as e:
             st.error(f"❌ Tahmin yapılırken bir hata oluştu: {str(e)}")
             st.write("🔍 Hata detayı:", str(e))
