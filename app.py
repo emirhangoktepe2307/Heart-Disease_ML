@@ -28,14 +28,14 @@ def add_ratios(X):
             'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
             'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
             'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
-            'CRP', 'Homocysteine Level'
+            'CRP Level', 'Homocysteine Level'
         ])
     
     # Triglyceride seviyesini kategorize et
     X['Ves_Hardness'] = X['Triglyceride Level'].apply(categorize_triglyceride)
     
     # Kan Basıncı Ve Enfeksiyon Oranı
-    X['Bp/Crp'] = X['CRP'].astype(float) / X['Blood Pressure'].astype(float)
+    X['Bp/Crp'] = X['CRP Level'].astype(float) / X['Blood Pressure'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
     X['Ves_dia_est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
@@ -53,7 +53,7 @@ def add_ratios(X):
         'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
         'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
         'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
-        'CRP', 'Homocysteine Level', 'Ves_Hardness',
+        'CRP Level', 'Homocysteine Level', 'Ves_Hardness',
         'Bp/Crp', 'Ves_dia_est', 'Meal order record',
         'Chol/Exe'
     ]]
