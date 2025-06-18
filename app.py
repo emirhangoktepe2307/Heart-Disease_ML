@@ -25,10 +25,10 @@ def add_ratios(X):
         X = pd.DataFrame(X, columns=[
             'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
             'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
-            'High Blood Pressure', 'HDL', 'LDL', 
-            'Alcohol', 'Stress', 'Sleep Hours', 
+            'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
+            'Alcohol Consumption', 'Stress', 'Sleep Hours', 
             'Sugar Intake', 'Triglycerides', 'Fasting Blood Sugar', 
-            'CRP', 'Homocysteine'
+            'CRP', 'Homocysteine Level'
         ])
     
     # Triglyceride seviyesini kategorize et
@@ -41,7 +41,7 @@ def add_ratios(X):
     X['Ves_Dia_Est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['Meal_Order_Record'] = X['Cholesterol'].astype(float) / X['BMI'].astype(float)
+    X['Meal order record'] = X['Cholesterol'].astype(float) / X['BMI'].astype(float)
     
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
     X['Chol/Exe'] = X['Cholesterol'].astype(float) / X['Exercise Habits'].astype(float)
@@ -50,11 +50,11 @@ def add_ratios(X):
     X = X[[
         'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
         'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
-        'High Blood Pressure', 'HDL', 'LDL', 
-        'Alcohol', 'Stress', 'Sleep Hours', 
+        'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
+        'Alcohol Consumption', 'Stress', 'Sleep Hours', 
         'Sugar Intake', 'Triglycerides', 'Fasting Blood Sugar', 
-        'CRP', 'Homocysteine', 'Ves_Hardness',
-        'Bp/Crp', 'Ves_Dia_Est', 'Meal_Order_Record',
+        'CRP', 'Homocysteine Level', 'Ves_Hardness',
+        'Bp/Crp', 'Ves_Dia_Est', 'Meal order record',
         'Chol/Exe'
     ]]
     
