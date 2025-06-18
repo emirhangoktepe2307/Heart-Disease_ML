@@ -88,9 +88,9 @@ def add_ratios(X):
     X["Ves_Hardness"] = X["Triglyceride Level"].apply(categorize_triglyceride)
     X["Bp/Crp"] = X["CRP Level"] / X["Blood Pressure"]
     X["Ves_dia_est"] = X["Blood Pressure"] / X["Cholesterol Level"]
-    X["Meal_order_record"] = X["Cholesterol Level"] / X["BMI"]
+    X["Meal order record"] = X["Cholesterol Level"] / X["BMI"]
     X["Chol/Exe"] = X["Cholesterol Level"] / X["Exercise Habits"]
-    return X.drop(["Cholesterol Level", "CRP Level"], axis=1)
+    return X
 
 # Ana işlem
 def main():
@@ -122,7 +122,10 @@ def main():
     pipe.fit(X_train, y_train)
     
     # Model kaydetme
-    joblib.dump(pipe, "heart_pipeline.joblib")
+    save_path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_pipeline.joblib"
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    joblib.dump(pipe, save_path)
+    print(f"✅ Pipeline başarıyla kaydedildi → {save_path}")
       
     # Model değerlendirme
     y_pred = pipe.predict(X_test)

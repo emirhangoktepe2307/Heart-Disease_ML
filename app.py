@@ -7,7 +7,13 @@ import os
 # Dosya yolunu göreceli olarak ayarla
 current_dir = os.path.dirname(os.path.abspath(__file__))
 csv_path = os.path.join(current_dir, 'heart_disease_feature.csv')
-df = pd.read_csv(csv_path)
+
+# CSV dosyasını güvenli şekilde yükle
+try:
+    df = pd.read_csv(csv_path)
+except FileNotFoundError:
+    st.error(f"CSV dosyası bulunamadı: {csv_path}")
+    st.stop()
 
 def categorize_triglyceride(level):
     if pd.isna(level):  # NaN değerleri kontrol et
@@ -46,18 +52,6 @@ def add_ratios(X):
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
     X['Chol/Exe'] = X['Cholesterol Level'].astype(float) / X['Exercise Habits'].astype(float)
     
-    # Sütun sırasını modelin beklediği sıraya göre düzenle
-    X = X[[
-        'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level', 'Exercise Habits', 
-        'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
-        'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
-        'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
-        'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
-        'CRP Level', 'Homocysteine Level', 'Ves_Hardness',
-        'Bp/Crp', 'Ves_dia_est', 'Meal order record',
-        'Chol/Exe'
-    ]]
-    
     return X
 
 # Sayfa yapılandırması
@@ -75,15 +69,11 @@ st.write("Bu uygulama, verilen bilgilere göre kalp hastalığı riskini tahmin 
 @st.cache_resource
 def load_model():
     try:
-        # Tam yolu kullan
-        current_dir = os.path.dirname(os.path.abspath(__file__))
-        model_path = os.path.join(current_dir, 'heart_pipeline.joblib')
-        
-        st.write(f"Model dosyası aranıyor: {model_path}")
+        # Model dosyasının yolunu ayarla
+        model_path = "/Users/emirhangoktepe/Desktop/Streamlit_ML/heart_pipeline.joblib"
         
         if not os.path.exists(model_path):
             st.error(f"Model dosyası bulunamadı: {model_path}")
-            # Mevcut dizindeki dosyaları listele
             st.write("Mevcut dizindeki dosyalar:")
             for file in os.listdir(current_dir):
                 st.write(f"- {file}")
@@ -106,13 +96,6 @@ if model is None:
     st.error("Model yüklenemedi. Lütfen model dosyasının doğru konumda olduğundan emin olun.")
     st.stop()
 
-# Model tipini ve özelliklerini kontrol et
-st.write("Model tipi:", type(model))
-if hasattr(model, 'feature_names_in_'):
-    st.write("Model özellikleri:", model.feature_names_in_)
-else:
-    st.warning("Model özellik isimleri bulunamadı!")
-
 # Kullanıcı girdileri
 st.subheader("Lütfen aşağıdaki bilgileri giriniz:")
 
@@ -131,8 +114,6 @@ with col1:
     hmocystesine_lvl=st.number_input("Kan Tahlilinizde Ölçülen Homosistein Seviyesi (Hcy) Değerini Giriniz",min_value=5.0,max_value=19.99,value=6.5)
 
 with col2:
-
-    
     stress= st.selectbox("Stres Seviyeniz Nedir?",["Az","Orta","Çok"])
     fhd= st.selectbox("Genetik Kalp Krizi Vakası Ailenizde Mevcut Mu?",["Evet","Hayır"])
     smoking= st.selectbox("Sigara Kullanıyor Musunuz?",["Evet","Hayır"])
@@ -187,10 +168,6 @@ if st.button("Tahmin Et"):
         # DataFrame'e dönüştürme ve oranları ekleme
         input_df = add_ratios(input_data)
         
-        # Model özelliklerini kontrol et
-        st.write("Model özellikleri:", model.feature_names_in_)
-        st.write("Girdi özellikleri:", input_df.columns.tolist())
-        
         # Tahminleme
         prediction = model.predict(input_df)
         probability = model.predict_proba(input_df)
@@ -203,12 +180,10 @@ if st.button("Tahmin Et"):
             st.success("Düşük Kalp Hastalığı Riski")
         
         st.write(f"Risk Olasılığı: {probability[0][1]*100:.2f}%")
+        
     except Exception as e:
         st.error(f"Tahmin yapılırken bir hata oluştu: {str(e)}")
         st.write("Hata detayı:", str(e))
-        st.write("Model tipi:", type(model))
-        if hasattr(model, 'feature_names_in_'):
-            st.write("Model özellikleri:", model.feature_names_in_)
 
 # Bilgilendirme
 st.markdown("---")
