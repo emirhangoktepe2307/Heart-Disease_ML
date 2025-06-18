@@ -267,10 +267,10 @@ if page == "🏠 Ana Sayfa":
             risk_probability = probability[0][1] * 100
             
             if prediction[0] == 1:
-                if risk_probability > 70:
+                if risk_probability > 60:
                     st.error("🚨 Yüksek Kalp Hastalığı Riski")
                     st.warning("Lütfen en kısa sürede bir kardiyoloğa başvurunuz.")
-                elif risk_probability > 50:
+                elif risk_probability > 40:
                     st.warning("⚠️ Orta Kalp Hastalığı Riski")
                     st.info("Düzenli kontroller yaptırmanız önerilir.")
                 else:
