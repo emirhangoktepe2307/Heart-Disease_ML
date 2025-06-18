@@ -451,7 +451,7 @@ elif page == "📋 Model Bilgileri":
     st.write("5. Açlık Kan Şekeri")
 
     st.subheader("💪🏻 Feature Engineering Sonrası Özellik Önem Sırası")
-    st.write("Model eğitimi sırasında en önemli özellikler (Değerlerin Yakınlıkları Çok Az Olduğundan İlk 10):")
+    st.write("Model eğitimi sırasında en önemli özellikler (Değerlerin Yakınlık Farkları Çok Az Olduğundan İlk 10):")
     st.write("1. Bp/Crp")
     st.write("2. Homocysteine Level")
     st.write("3. Sleep Hours")
