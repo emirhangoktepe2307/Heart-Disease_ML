@@ -23,7 +23,7 @@ def add_ratios(X):
     # DataFrame'e dönüştürme
     if isinstance(X, np.ndarray):
         X = pd.DataFrame(X, columns=[
-            'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
+            'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level', 'Exercise Habits', 
             'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
             'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
             'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
@@ -38,24 +38,23 @@ def add_ratios(X):
     X['Bp/Crp'] = X['CRP Level'].astype(float) / X['Blood Pressure'].astype(float)
     
     # Kolesterol ve Kan Basıncı Oranı
-    X['Ves_dia_est'] = X['Blood Pressure'].astype(float) / X['Cholesterol'].astype(float)
+    X['Ves_dia_est'] = X['Blood Pressure'].astype(float) / X['Cholesterol Level'].astype(float)
     
     # Yemek Skoru (Skor Ne Kadar Yüksekse Beslenme Düzeni O Kadar İyi)
-    X['Meal order record'] = X['Cholesterol'].astype(float) / X['BMI'].astype(float)
+    X['Meal order record'] = X['Cholesterol Level'].astype(float) / X['BMI'].astype(float)
     
     # Egzersiz Durumuna Bağlı Kolesterol Oranı
-    X['Chol/Exe'] = X['Cholesterol'].astype(float) / X['Exercise Habits'].astype(float)
+    X['Chol/Exe'] = X['Cholesterol Level'].astype(float) / X['Exercise Habits'].astype(float)
     
     # Sütun sırasını modelin beklediği sıraya göre düzenle
     X = X[[
-        'Age', 'Gender', 'Blood Pressure', 'Cholesterol', 'Exercise Habits', 
-        'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI', 
-        'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol', 
-        'Alcohol Consumption', 'Stress Level', 'Sleep Hours', 
-        'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar', 
-        'CRP Level', 'Homocysteine Level', 'Ves_Hardness',
-        'Bp/Crp', 'Ves_dia_est', 'Meal order record',
-        'Chol/Exe'
+        'Age', 'Gender', 'Blood Pressure', 'Cholesterol Level',
+       'Exercise Habits', 'Smoking', 'Family Heart Disease', 'Diabetes', 'BMI',
+       'High Blood Pressure', 'Low HDL Cholesterol', 'High LDL Cholesterol',
+       'Alcohol Consumption', 'Stress Level', 'Sleep Hours',
+       'Sugar Consumption', 'Triglyceride Level', 'Fasting Blood Sugar',
+       'CRP Level', 'Homocysteine Level', 'Ves_Hardness', 'Bp/Crp',
+       'Ves_dia_est', 'Meal order record', 'Chol/Exe'
     ]]
     
     return X
