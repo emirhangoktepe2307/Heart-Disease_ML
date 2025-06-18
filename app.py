@@ -406,15 +406,19 @@ elif page == "📈 SUNUM":
             # Görselleştirme seçenekleri
             viz_option = st.selectbox(
                 "Görselleştirme Türü Seçin",
-                ["📊 Kategorik Değişkenler", "📈 Sayısal Değişkenler", "🎯 Hedef Değişken Analizi"]
+                ["📊 İşlenmemiş Veri Seti Kategorik Değişken Dağılımı", "📈 İşlenmemiş Veri Seti Sayısal Değişkenlerin Dağılımı", "🦾 İşlenmiş Veri Seti Sayısal Değişkenlerin Dağılımı", "🎯 Hedef Değişken Analizi"]
             )
             
-            if viz_option == "📊 Kategorik Değişkenler":
-                st.write("**Kategorik Değişkenlerin Frekans Dağılımları:**")
-                plot_categorical_distributions(df)
+            if viz_option == "📊 İşlenmemiş Veri Seti Kategorik Değişken Dağılımı":
+                st.write("**İşlenmemiş Veri Setindeki Kategorik Değişkenlerin Frekans Dağılımları:**")
+                plot_categorical_distributions(df_first)
                 
-            elif viz_option == "📈 Sayısal Değişkenler":
-                st.write("**Sayısal Değişkenlerin Dağılımları:**")
+            elif viz_option == "📈 İşlenmemiş Veri Seti Sayısal Değişkenlerin Dağılımı":
+                st.write("**İşlenmemiş Veri Setindeki Sayısal Değişkenlerin Dağılımları:**")
+                plot_numerical_distributions(df_first)
+
+            elif viz_option == "🦾 İşlenmiş Veri Seti Sayısal Değişkenlerin Dağılımı":
+                st.write("**İşlenmiş Veri Setindeki Sayısal Değişkenlerin Dağılımları:**")
                 plot_numerical_distributions(df)
                 
             elif viz_option == "🎯 Hedef Değişken Analizi":
