@@ -201,7 +201,7 @@ if page == "🏠 Ana Sayfa":
         high_blo_pre=st.selectbox("Yüksek Tansiyon Hastalığınız Var Mı?",["Evet","Hayır"])
         hdl=st.selectbox("İyi Kolesterol (HDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
         ldl=st.selectbox("Kötü Kolesterol (LDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
-        sugar_cons=st.selectbox("Günlük Şeker Tüketme Sıklığınız",["Az","Orta","Çok"])
+        sugar_cons=st.selectbox("Günlük Şeker Tüketme Sıklığınız",["Az/Hiç","Orta","Çok"])
 
     # Veri encode dönüşümleri
     sex_enc = {"Erkek":1, "Kadın":0}[sex]
@@ -214,7 +214,7 @@ if page == "🏠 Ana Sayfa":
     high_blo_pre_enc={"Evet":1, "Hayır":0}[high_blo_pre]
     hdl_enc={"Evet":0,"Hayır":1}[hdl]
     ldl_enc={"Evet":1,"Hayır":0}[ldl]
-    sugar_cons_enc={"Az":0,"Orta":1,"Çok":2}[sugar_cons]
+    sugar_cons_enc={"Az/Hiç":0,"Orta":1,"Çok":2}[sugar_cons]
 
     # Tahmin butonu
     if st.button("🔍 Tahmin Et"):
