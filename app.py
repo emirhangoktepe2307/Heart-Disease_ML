@@ -443,13 +443,25 @@ elif page == "📋 Model Bilgileri":
         st.write("- min_samples_split: 2")
         st.write("- random_state: 42")
     
-    st.subheader("📊 Özellik Önem Sırası")
-    st.write("Model eğitimi sırasında en önemli özellikler:")
-    st.write("1. Yaş")
+    st.subheader("📊 Feature Engineering Öncesi Özellik Önem Sırası")
+    st.write("1. Age")
     st.write("2. Kan Basıncı")
     st.write("3. Kolesterol Seviyesi")
     st.write("4. BMI")
     st.write("5. Açlık Kan Şekeri")
+
+    st.subheader("💪🏻 Feature Engineering Sonrası Özellik Önem Sırası")
+    st.write("Model eğitimi sırasında en önemli özellikler (Değerlerin Yakınlıkları Çok Az Olduğundan İlk 10):")
+    st.write("1. Bp/Crp")
+    st.write("2. Homocysteine Level")
+    st.write("3. Sleep Hours")
+    st.write("4. Age")
+    st.write("5. BMI")
+    st.write("6. Blood Pressure")
+    st.write("7. Chol/Exe")
+    st.write("8. Fasting Blood Sugar")
+    st.write("9. Ves_dia_est")
+    st.write("10. Meal order record")
 
 # Hakkında sayfası
 elif page == "ℹ️ Hakkında":
