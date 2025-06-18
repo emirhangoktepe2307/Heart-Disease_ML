@@ -311,7 +311,7 @@ elif page == "📈 SUNUM":
     # Sunum bölümleri
     presentation_section = st.selectbox(
         "Sunum Bölümü Seçin",
-        ["📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı", "📈 Görselleştirmeler"]
+        ["📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı"]
     )
     
     if presentation_section == "📊 Veri Analizi":
