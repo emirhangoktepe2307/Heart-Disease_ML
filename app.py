@@ -260,28 +260,66 @@ if page == "🏠 Ana Sayfa":
             prediction = model.predict(input_df)
             probability = model.predict_proba(input_df)
             
-            # Sonuçları gösterme
-            st.subheader("📊 Tahmin Sonucu")
-            
             # Risk seviyesine göre renkli gösterim
             risk_probability = probability[0][1] * 100
             
-            if prediction[0] == 1:
-                if risk_probability > 60:
-                    st.error("🚨 Yüksek Kalp Hastalığı Riski")
-                    st.warning("Lütfen en kısa sürede bir kardiyoloğa başvurunuz.")
-                elif risk_probability > 40:
-                    st.warning("⚠️ Orta Kalp Hastalığı Riski")
-                    st.info("Düzenli kontroller yaptırmanız önerilir.")
+            # Risk kategorilerini belirle
+            if prediction[0] == 1:  # Kalp hastalığı riski var
+                if risk_probability >= 80:
+                    risk_level = "🚨 ÇOK YÜKSEK"
+                    risk_color = "error"
+                    risk_message = "ACİL: Lütfen hemen bir kardiyoloğa başvurunuz!"
+                    recommendation = "• Acil tıbbi müdahale gerekli\n• Tüm risk faktörlerini kontrol edin\n• Stres ve fiziksel aktiviteyi sınırlayın"
+                elif risk_probability >= 60:
+                    risk_level = "⚠️ YÜKSEK"
+                    risk_color = "error"
+                    risk_message = "Yüksek risk tespit edildi. Kardiyoloji kontrolü önerilir."
+                    recommendation = "• En kısa sürede kardiyoloğa başvurun\n• Düzenli kontroller yaptırın\n• Yaşam tarzı değişiklikleri uygulayın"
+                elif risk_probability >= 40:
+                    risk_level = "🟡 ORTA"
+                    risk_color = "warning"
+                    risk_message = "Orta seviye risk tespit edildi."
+                    recommendation = "• Düzenli sağlık kontrolleri yaptırın\n• Risk faktörlerini azaltın\n• Sağlıklı yaşam tarzı benimseyin"
                 else:
-                    st.info("📈 Düşük-Orta Kalp Hastalığı Riski")
+                    risk_level = "🟢 DÜŞÜK-ORTA"
+                    risk_color = "info"
+                    risk_message = "Düşük-orta seviye risk tespit edildi."
+                    recommendation = "• Düzenli kontroller yaptırmaya devam edin\n• Sağlıklı yaşam tarzınızı sürdürün\n• Risk faktörlerini takip edin"
+            else:  # Kalp hastalığı riski düşük
+                if risk_probability <= 10:
+                    risk_level = "✅ ÇOK DÜŞÜK"
+                    risk_color = "success"
+                    risk_message = "Mükemmel! Kalp hastalığı riskiniz çok düşük."
+                    recommendation = "• Sağlıklı yaşam tarzınızı sürdürün\n• Düzenli kontroller yaptırmaya devam edin\n• Örnek bir yaşam tarzınız var!"
+                elif risk_probability <= 20:
+                    risk_level = "🟢 DÜŞÜK"
+                    risk_color = "success"
+                    risk_message = "Kalp hastalığı riskiniz düşük seviyede."
+                    recommendation = "• Mevcut sağlıklı alışkanlıklarınızı koruyun\n• Düzenli kontroller yaptırmaya devam edin\n• Risk faktörlerini takip edin"
+                else:
+                    risk_level = "🟡 DÜŞÜK-ORTA"
+                    risk_color = "info"
+                    risk_message = "Düşük-orta seviye risk tespit edildi."
+                    recommendation = "• Düzenli kontroller yaptırmaya devam edin\n• Risk faktörlerini azaltmaya çalışın\n• Sağlıklı yaşam tarzınızı sürdürün"
+            
+            # Sonuçları gösterme
+            st.subheader("📊 Tahmin Sonucu")
+            
+            # Risk seviyesi kartı
+            if risk_color == "error":
+                st.error(f"**{risk_level} RİSK**")
+            elif risk_color == "warning":
+                st.warning(f"**{risk_level} RİSK**")
+            elif risk_color == "success":
+                st.success(f"**{risk_level} RİSK**")
             else:
-                if risk_probability < 20:
-                    st.success("✅ Düşük Kalp Hastalığı Riski")
-                    st.info("Sağlıklı yaşam tarzınızı sürdürün.")
-                else:
-                    st.info("📉 Düşük Kalp Hastalığı Riski")
-                    st.info("Düzenli kontroller yaptırmaya devam edin.")
+                st.info(f"**{risk_level} RİSK**")
+            
+            st.write(f"**{risk_message}**")
+            
+            # Öneriler
+            st.subheader("💡 Öneriler")
+            st.write(recommendation)
             
             # Risk olasılığını göster
             col1, col2, col3 = st.columns(3)
