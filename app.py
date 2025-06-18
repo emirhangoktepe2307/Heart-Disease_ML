@@ -197,7 +197,7 @@ if page == "🏠 Ana Sayfa":
         smoking= st.selectbox("Sigara Kullanıyor Musunuz?",["Evet","Hayır"])
         diabetes=st.selectbox("Şeker Hastalığınız Var Mı?",["Evet","Hayır"])
         exercise=st.selectbox("Egzersiz Sıklığınız Nedir?",["Az","Orta","Çok"])
-        alcohol= st.selectbox("Alkol Tüketme Sıklığınız Nedir",["Az","Orta","Çok"])
+        alcohol= st.selectbox("Alkol Tüketme Sıklığınız Nedir",["Az/Hiç","Orta","Çok"])
         high_blo_pre=st.selectbox("Yüksek Tansiyon Hastalığınız Var Mı?",["Evet","Hayır"])
         hdl=st.selectbox("İyi Kolesterol (HDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
         ldl=st.selectbox("Kötü Kolesterol (LDL) Seviyeniz Yüksek Mi?",["Evet","Hayır"])
@@ -209,8 +209,8 @@ if page == "🏠 Ana Sayfa":
     fhd_enc={"Evet":1, "Hayır":0}[fhd]
     smoking_enc={"Evet":1, "Hayır":0}[smoking]
     exercise_enc={"Çok":1, "Orta":2, "Az":3}[exercise]
-    stress_enc={"Az":1, "Orta":2, "Çok":3}[stress]
-    alcohol_enc = {"Az": 0, "Orta": 1, "Çok": 2}[alcohol]
+    stress_enc={"Az":0, "Orta":1, "Çok":2}[stress]
+    alcohol_enc = {"Az/Hiç": 0, "Orta": 1, "Çok": 2}[alcohol]
     high_blo_pre_enc={"Evet":1, "Hayır":0}[high_blo_pre]
     hdl_enc={"Evet":0,"Hayır":1}[hdl]
     ldl_enc={"Evet":1,"Hayır":0}[ldl]
