@@ -349,7 +349,7 @@ elif page == "📈 SUNUM":
     # Sunum bölümleri
     presentation_section = st.selectbox(
         "Sunum Bölümü Seçin",
-        ["🌍 Günlük Hayata Katkıları ve Faydaları, 📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı"]
+        ["🌍 Günlük Hayata Katkıları ve Faydaları", "📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı"]
     )
     
     if presentation_section == "📊 Veri Analizi":
@@ -521,7 +521,7 @@ elif page == "📈 SUNUM":
                 st.write("• Özellik önemini belirleme")
                 st.write("• Kategorik ve sayısal verilerle çalışabilir")
 
-            # GÜNLÜK HAYATA FAYDALARI
+    # GÜNLÜK HAYATA FAYDALARI
     elif presentation_section == "🌍 Günlük Hayata Katkıları ve Faydaları":
         st.subheader("🌍 Günlük Hayata Katkıları ve Faydaları")
         st.markdown("""
