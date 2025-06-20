@@ -349,7 +349,7 @@ elif page == "📈 SUNUM":
     # Sunum bölümleri
     presentation_section = st.selectbox(
         "Sunum Bölümü Seçin",
-        ["📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı"]
+        ["🌍 Günlük Hayata Katkıları ve Faydaları, 📊 Veri Analizi", "🔍 Özellik Mühendisliği", "🤖 Model Performansı"]
     )
     
     if presentation_section == "📊 Veri Analizi":
@@ -522,15 +522,16 @@ elif page == "📈 SUNUM":
                 st.write("• Kategorik ve sayısal verilerle çalışabilir")
 
             # GÜNLÜK HAYATA FAYDALARI
-            st.subheader("🌍 Günlük Hayata Katkıları ve Faydaları")
-            st.markdown("""
-            - **Erken Teşhis:** Kullanıcılar, risklerini önceden öğrenerek doktora başvurma konusunda bilinçlenir.
-            - **Kişiselleştirilmiş Öneriler:** Her kullanıcıya özel yaşam tarzı ve sağlık önerileri sunulur.
-            - **Sağlık Okuryazarlığı:** Kullanıcılar, sağlık verilerinin anlamını ve önemini daha iyi kavrar.
-            - **Toplumsal Farkındalık:** Kalp hastalığı gibi yaygın bir sağlık sorunu hakkında toplumsal bilinç artar.
-            - **Kolay Erişim:** Web tabanlı arayüz sayesinde herkes, hızlı ve kolay şekilde risk değerlendirmesi yapabilir.
-            - **Doktorlara Destek:** Ön değerlendirme aracı olarak doktorların iş yükünü azaltabilir.
-            """)
+    elif presentation_section == "🌍 Günlük Hayata Katkıları ve Faydaları":
+        st.subheader("🌍 Günlük Hayata Katkıları ve Faydaları")
+        st.markdown("""
+        - **Erken Teşhis:** Kullanıcılar, risklerini önceden öğrenerek doktora başvurma konusunda bilinçlenir.
+        - **Kişiselleştirilmiş Öneriler:** Her kullanıcıya özel yaşam tarzı ve sağlık önerileri sunulur.
+        - **Sağlık Okuryazarlığı:** Kullanıcılar, sağlık verilerinin anlamını ve önemini daha iyi kavrar.
+        - **Toplumsal Farkındalık:** Kalp hastalığı gibi yaygın bir sağlık sorunu hakkında toplumsal bilinç artar.
+        - **Kolay Erişim:** Web tabanlı arayüz sayesinde herkes, hızlı ve kolay şekilde risk değerlendirmesi yapabilir.
+        - **Doktorlara Destek:** Ön değerlendirme aracı olarak doktorların iş yükünü azaltabilir.
+        """)
 
 # Model Bilgileri sayfası
 elif page == "📋 Model Bilgileri":
